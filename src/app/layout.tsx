@@ -1,22 +1,24 @@
-import type { Metadata } from "next";
 import { Rubik } from 'next/font/google';
-import "./globals.css";
+import './globals.css';
+import { Metadata } from 'next';
 
 const rubik = Rubik({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: "Simulatory",
-  description: "Mathematical Simulations for Creative Minds designed to break the boundaries of traditional simulation.",
+  title: 'Simulatory',
+  description: 'Mathematical Simulations for Creative Minds.'
 };
 
 export default function RootLayout({
-  children,
+  children
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={rubik.className}>{children}</body>
+    <html lang='en' className={rubik.className}>
+      <body className='bg-gradient-to-b from-white to-slate-300'>
+        <div className='container min-h-screen pt-16 antialiased'>{children}</div>
+      </body>
     </html>
   );
 }
