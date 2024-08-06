@@ -199,7 +199,7 @@ const Page = () => {
           </button>
         </div>
         <div className='mt-2 grid font-mono sm:grid-cols-3'>
-          {[0, 3, 6, 1, 4, 7, 2, 5, 8].map((count) => (
+          {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((count) => (
             <span key={count} className='w-full text-center'>
               <span className={count === 1 ? 'mr-6' : 'mr-4'}>
                 {count} Neighbor{count !== 1 && 's'}
