@@ -9,7 +9,40 @@ const buttonClass: string & React.CSSProperties =
   'rounded bg-blue-500 px-3 py-1 font-medium text-white hover:bg-blue-700 disabled:opacity-50 disabled:hover:bg-blue-500';
 
 const initialRules = ['-1', '-1', '0', '1', '-1', '-1', '-1', '-1', '-1'];
-const presets = {};
+const presets: { [key: string]: { height: number; width: number; fields: (0 | 1)[] } } = {
+  glider: {
+    height: 3,
+    width: 3,
+    fields: [0, 1, 0, 0, 0, 1, 1, 1, 1]
+  },
+  glider_gun: {
+    height: 9,
+    width: 36,
+    fields: [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0,
+      0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+      1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0,
+      0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0,
+      0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    ]
+  },
+  '101': {
+    height: 12,
+    width: 18,
+    fields: [
+      0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0,
+      0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1,
+      0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1,
+      0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0,
+      0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0
+    ]
+  }
+};
 type BasicPresets = 'blank' | 'random_10' | 'random_20' | 'random_50';
 
 const Page = () => {
@@ -17,7 +50,7 @@ const Page = () => {
   const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null);
 
   const [rules, setRules] = useState<string[]>(initialRules);
-  const [preset, setPreset] = useState<keyof typeof presets | BasicPresets>('random_20');
+  const [preset, setPreset] = useState<(keyof typeof presets | BasicPresets) & string>('random_20');
 
   const [numRows, setNumRows] = useState(0);
   const [numCols, setNumCols] = useState(0);
@@ -29,26 +62,40 @@ const Page = () => {
   const [size, setSize] = useState(4);
 
   const createGrid = useCallback(() => {
-    // if (preset.startsWith('random')) {
+    const grid: number[][] = [];
     if (preset === 'blank') {
-      const grid: number[][] = [];
       for (let i = 0; i < numRows; i++) {
         grid[i] = [];
         for (let j = 0; j < numCols; j++) {
           grid[i][j] = 0;
         }
       }
-      return grid;
-    } else if (true) {
-      const grid: number[][] = [];
+    } else if (preset.startsWith('random')) {
       for (let i = 0; i < numRows; i++) {
         grid[i] = [];
         for (let j = 0; j < numCols; j++) {
           grid[i][j] = Math.random() < parseInt(preset.split('_')[1]) * 0.01 ? 1 : 0;
         }
       }
-      return grid;
+    } else if (Object.keys(presets).includes(preset)) {
+      const { height, width, fields } = presets[preset as keyof typeof presets];
+      for (let i = 0; i < numRows; i++) {
+        grid[i] = [];
+        for (let j = 0; j < numCols; j++) {
+          grid[i][j] = 0;
+        }
+      }
+      for (let i = 0; i < height; i++) {
+        for (let j = 0; j < width; j++) {
+          grid[i + Math.floor((numRows - presets[preset].height) / 2)][
+            j + Math.floor((numCols - presets[preset].width) / 2)
+          ] = fields[i * width + j];
+        }
+      }
+    } else {
+      throw new Error('Invalid preset');
     }
+    return grid;
   }, [numCols, numRows, preset]);
 
   useEffect(() => {
@@ -256,6 +303,9 @@ const Page = () => {
             <SelectItem value={'random_10'}>Random 10%</SelectItem>
             <SelectItem value={'random_20'}>Random 20%</SelectItem>
             <SelectItem value={'random_50'}>Random 50%</SelectItem>
+            <SelectItem value={'glider'}>Glider</SelectItem>
+            <SelectItem value={'glider_gun'}>Glider Gun</SelectItem>
+            <SelectItem value={'101'}>1 0 1</SelectItem>
           </SelectContent>
         </Select>
       </div>
