@@ -186,7 +186,7 @@ const Page = () => {
   const nextSpeed = speeds[(speeds.indexOf(speed) + 1) % speeds.length];
 
   return (
-    <div className='mx-auto max-w-[700px]'>
+    <div className='mx-auto max-w-[800px]'>
       <canvas
         width={600}
         height={400}
