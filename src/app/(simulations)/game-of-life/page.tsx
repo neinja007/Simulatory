@@ -2,8 +2,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-const speeds = [250, 100, 50, 25, 10];
-const sizes = [2, 3, 4, 5];
+const speeds = [250, 100, 50, 25, 10, 1];
+const sizes = [2, 3, 5, 10];
 
 const buttonClass: string & React.CSSProperties =
   'rounded bg-blue-500 px-3 py-1 font-medium text-white hover:bg-blue-700 disabled:opacity-50 disabled:hover:bg-blue-500';
