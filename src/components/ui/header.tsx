@@ -9,7 +9,7 @@ type HeaderProps = {
 const Header = ({ root, title }: HeaderProps) => {
   return (
     <>
-      <div className={cn('flex items-baseline text-center', root ? 'justify-center' : 'justify-between')}>
+      <div className={cn('text-center md:flex md:items-baseline', root ? 'justify-center' : 'justify-between')}>
         {!root && (
           <Link href={'/'} className='text-1xl mb-4 uppercase tracking-wide text-blue-500 underline'>
             BACK TO OVERVIEW
