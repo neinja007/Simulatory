@@ -7,7 +7,7 @@ export default function Overview() {
   return (
     <>
       <Header title='Overview' root />
-      <div className='grid grid-cols-3 gap-5'>
+      <div className='grid gap-5 md:grid-cols-2 xl:grid-cols-3'>
         {routes.map(({ name, description, href }) => (
           <Card key={name}>
             <CardHeader>
