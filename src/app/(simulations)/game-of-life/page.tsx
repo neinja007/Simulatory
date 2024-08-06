@@ -306,7 +306,7 @@ const Page = () => {
         <span className='font-bold'>Presets:</span>
         <Select
           value={preset}
-          onValueChange={(value: string) => setPreset(value as keyof typeof presets | BasicPresets)}
+          onValueChange={(value: string) => setPreset(value as (keyof typeof presets | BasicPresets) & string)}
         >
           <SelectTrigger className='mx-auto h-7 w-[150px]'>
             <SelectValue placeholder='Preset' />
