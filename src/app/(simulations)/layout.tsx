@@ -17,8 +17,8 @@ const Layout = ({ children }: LayoutProps) => {
   return (
     <div className='mx-auto max-w-[900px]'>
       <Header title={route.name} />
-      <span className='mb-8 text-slate-500 dark:text-slate-400'>{route.description}</span>
-      {children}
+      <span className='text-slate-500 dark:text-slate-400'>{route.description}</span>
+      <div className='my-8'>{children}</div>
     </div>
   );
 };

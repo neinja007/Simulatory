@@ -1,13 +1,20 @@
 'use client';
-
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const speeds = [250, 100, 50, 25, 10];
 const sizes = [2, 3, 4, 5];
 
+const buttonClass: string & React.CSSProperties =
+  'rounded bg-blue-500 px-3 py-1 font-medium text-white hover:bg-blue-700 disabled:opacity-50 disabled:hover:bg-blue-500';
+
+const initialRules = ['-1', '-1', '0', '1', '-1', '-1', '-1', '-1', '-1'];
+
 const Page = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null);
+
+  const [rules, setRules] = useState<string[]>(initialRules);
 
   const [numRows, setNumRows] = useState(0);
   const [numCols, setNumCols] = useState(0);
@@ -16,14 +23,14 @@ const Page = () => {
   const [grid, setGrid] = useState<number[][]>([]);
 
   const [speed, setSpeed] = useState(50);
-  const [size, setSize] = useState(2);
+  const [size, setSize] = useState(4);
 
   const createGrid = useCallback(() => {
     const grid: number[][] = [];
     for (let i = 0; i < numRows; i++) {
       grid[i] = [];
       for (let j = 0; j < numCols; j++) {
-        grid[i][j] = Math.random() > 0.8 ? 1 : 0; // Random initialization
+        grid[i][j] = Math.random() > 0.8 ? 1 : 0;
       }
     }
     return grid;
@@ -44,10 +51,8 @@ const Page = () => {
   }, [numRows, numCols, createGrid]);
 
   useEffect(() => {
-    if (canvasRef.current) {
-      setNumRows(Math.floor(canvasRef.current.height / size));
-      setNumCols(Math.floor(canvasRef.current.width / size));
-    }
+    setNumRows(400 / size);
+    setNumCols(600 / size);
   }, [size]);
 
   const drawGrid = useCallback(() => {
@@ -96,17 +101,17 @@ const Page = () => {
       newGrid[i] = [];
       for (let j = 0; j < numCols; j++) {
         const neighbors = countNeighbors(i, j);
-        if (grid[i][j] === 1 && (neighbors < 2 || neighbors > 3)) {
-          newGrid[i][j] = 0;
-        } else if (grid[i][j] === 0 && neighbors === 3) {
+        if (rules[neighbors] === '1') {
           newGrid[i][j] = 1;
+        } else if (rules[neighbors] === '-1') {
+          newGrid[i][j] = 0;
         } else {
           newGrid[i][j] = grid[i][j];
         }
       }
     }
     setGrid(newGrid);
-  }, [countNeighbors, grid, numCols, numRows]);
+  }, [countNeighbors, grid, numCols, numRows, rules]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -117,17 +122,17 @@ const Page = () => {
   }, [drawGrid, isRunning, speed, updateGrid]);
 
   return (
-    <div>
+    <div className='mx-auto max-w-[700px]'>
       <canvas
         width={600}
         height={400}
         ref={canvasRef}
-        className='mx-auto my-6 max-w-[600px] rounded-lg border p-1 shadow'
+        className='mx-auto my-6 h-full w-full rounded-lg border p-1 shadow'
       />
-      <div className='flex justify-center gap-x-3'>
+      <div className='grid gap-3 sm:grid-cols-2 md:grid-cols-4'>
         <button
           hidden={isRunning}
-          className='w-1/4 rounded bg-blue-500 px-3 py-1 font-medium text-white hover:bg-blue-700 disabled:opacity-50 disabled:hover:bg-blue-500'
+          className={buttonClass}
           onClick={() => {
             updateGrid();
             setIsRunning(true);
@@ -137,7 +142,7 @@ const Page = () => {
         </button>
         <button
           hidden={!isRunning}
-          className='w-1/4 rounded bg-blue-500 px-3 py-1 font-medium text-white hover:bg-blue-700 disabled:opacity-50 disabled:hover:bg-blue-500'
+          className={buttonClass}
           onClick={() => {
             setIsRunning(false);
           }}
@@ -145,7 +150,7 @@ const Page = () => {
           Pause
         </button>
         <button
-          className='w-1/4 rounded bg-blue-500 px-3 py-1 font-medium text-white hover:bg-blue-700 disabled:opacity-50 disabled:hover:bg-blue-500'
+          className={buttonClass}
           onClick={() => {
             setIsRunning(false);
             setGrid(createGrid());
@@ -156,7 +161,7 @@ const Page = () => {
         </button>
         <button
           hidden={isRunning}
-          className='w-1/4 rounded bg-blue-500 px-3 py-1 font-medium text-white hover:bg-blue-700 disabled:opacity-50 disabled:hover:bg-blue-500'
+          className={buttonClass}
           onClick={() => {
             updateGrid();
             drawGrid();
@@ -166,7 +171,7 @@ const Page = () => {
         </button>
         <button
           hidden={!isRunning}
-          className='w-1/4 rounded bg-blue-500 px-3 py-1 font-medium text-white hover:bg-blue-700 disabled:opacity-50 disabled:hover:bg-blue-500'
+          className={buttonClass}
           onClick={() => {
             setSpeed((prev) => speeds[(speeds.indexOf(prev) + 1) % speeds.length]);
           }}
@@ -174,7 +179,7 @@ const Page = () => {
           Interval: {speed} -{'>'} {speeds[(speeds.indexOf(speed) + 1) % speeds.length]}
         </button>
         <button
-          className='w-1/4 rounded bg-blue-500 px-3 py-1 font-medium text-white hover:bg-blue-700 disabled:opacity-50 disabled:hover:bg-blue-500'
+          className={buttonClass}
           onClick={() => {
             setSize((prev) => sizes[(sizes.indexOf(prev) + 1) % sizes.length]);
             setGrid(createGrid());
@@ -184,6 +189,43 @@ const Page = () => {
         >
           Size: {size} -{'>'} {sizes[(sizes.indexOf(size) + 1) % sizes.length]}
         </button>
+      </div>
+
+      <div className='mt-7'>
+        <div className='flex justify-between'>
+          <span className='font-bold'>Customization:</span>
+          <button onClick={() => setRules(initialRules)} className='text-blue-500 underline'>
+            Reset Rules
+          </button>
+        </div>
+        <div className='mt-2 grid font-mono sm:grid-cols-3'>
+          {[0, 3, 6, 1, 4, 7, 2, 5, 8].map((count) => (
+            <span key={count} className='w-full text-center'>
+              <span className={count === 1 ? 'mr-6' : 'mr-4'}>
+                {count} Neighbor{count !== 1 && 's'}
+              </span>
+              <Select
+                value={rules[count]}
+                onValueChange={(value: string) =>
+                  setRules((prev) => {
+                    const newRules = [...prev];
+                    newRules[count] = value;
+                    return newRules;
+                  })
+                }
+              >
+                <SelectTrigger className='mx-auto h-7 w-[150px]'>
+                  <SelectValue placeholder='Action' />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={'1'}>Populate</SelectItem>
+                  <SelectItem value={'-1'}>Die</SelectItem>
+                  <SelectItem value={'0'}>Don&apos;t Change</SelectItem>
+                </SelectContent>
+              </Select>
+            </span>
+          ))}
+        </div>
       </div>
     </div>
   );
