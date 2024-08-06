@@ -183,6 +183,8 @@ const Page = () => {
     return () => clearInterval(interval);
   }, [drawGrid, isRunning, speed, updateGrid]);
 
+  const nextSpeed = speeds[(speeds.indexOf(speed) + 1) % speeds.length];
+
   return (
     <div className='mx-auto max-w-[700px]'>
       <canvas
@@ -238,7 +240,18 @@ const Page = () => {
             setSpeed((prev) => speeds[(speeds.indexOf(prev) + 1) % speeds.length]);
           }}
         >
-          Interval: {speed} -{'>'} {speeds[(speeds.indexOf(speed) + 1) % speeds.length]}
+          Interval:{' '}
+          {speed === 1 ? (
+            <span className='align-middle text-3xl font-bold leading-3 text-red-500'>&#8734;</span>
+          ) : (
+            speed
+          )}{' '}
+          -{'>'}{' '}
+          {nextSpeed === 1 ? (
+            <span className='align-middle text-3xl font-bold leading-3 text-red-500'>&#8734;</span>
+          ) : (
+            nextSpeed
+          )}
         </button>
         <button
           className={buttonClass}
