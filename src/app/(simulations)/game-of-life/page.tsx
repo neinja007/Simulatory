@@ -9,12 +9,15 @@ const buttonClass: string & React.CSSProperties =
   'rounded bg-blue-500 px-3 py-1 font-medium text-white hover:bg-blue-700 disabled:opacity-50 disabled:hover:bg-blue-500';
 
 const initialRules = ['-1', '-1', '0', '1', '-1', '-1', '-1', '-1', '-1'];
+const presets = {};
+type BasicPresets = 'blank' | 'random_10' | 'random_20' | 'random_50';
 
 const Page = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null);
 
   const [rules, setRules] = useState<string[]>(initialRules);
+  const [preset, setPreset] = useState<keyof typeof presets | BasicPresets>('random_20');
 
   const [numRows, setNumRows] = useState(0);
   const [numCols, setNumCols] = useState(0);
@@ -26,15 +29,27 @@ const Page = () => {
   const [size, setSize] = useState(4);
 
   const createGrid = useCallback(() => {
-    const grid: number[][] = [];
-    for (let i = 0; i < numRows; i++) {
-      grid[i] = [];
-      for (let j = 0; j < numCols; j++) {
-        grid[i][j] = Math.random() > 0.8 ? 1 : 0;
+    // if (preset.startsWith('random')) {
+    if (preset === 'blank') {
+      const grid: number[][] = [];
+      for (let i = 0; i < numRows; i++) {
+        grid[i] = [];
+        for (let j = 0; j < numCols; j++) {
+          grid[i][j] = 0;
+        }
       }
+      return grid;
+    } else if (true) {
+      const grid: number[][] = [];
+      for (let i = 0; i < numRows; i++) {
+        grid[i] = [];
+        for (let j = 0; j < numCols; j++) {
+          grid[i][j] = Math.random() < parseInt(preset.split('_')[1]) * 0.01 ? 1 : 0;
+        }
+      }
+      return grid;
     }
-    return grid;
-  }, [numCols, numRows]);
+  }, [numCols, numRows, preset]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -226,6 +241,23 @@ const Page = () => {
             </span>
           ))}
         </div>
+      </div>
+      <div className='mt-7'>
+        <span className='font-bold'>Presets:</span>
+        <Select
+          value={preset}
+          onValueChange={(value: string) => setPreset(value as keyof typeof presets | BasicPresets)}
+        >
+          <SelectTrigger className='mx-auto h-7 w-[150px]'>
+            <SelectValue placeholder='Preset' />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value={'blank'}>Blank</SelectItem>
+            <SelectItem value={'random_10'}>Random 10%</SelectItem>
+            <SelectItem value={'random_20'}>Random 20%</SelectItem>
+            <SelectItem value={'random_50'}>Random 50%</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
     </div>
   );
