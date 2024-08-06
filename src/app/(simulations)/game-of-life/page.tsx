@@ -268,7 +268,7 @@ const Page = () => {
 
       <div className='mt-7'>
         <div className='flex justify-between'>
-          <span className='font-bold'>Customization:</span>
+          <span className='font-bold'>Rules:</span>
           <button onClick={() => setRules(initialRules)} className='text-blue-500 underline'>
             Reset Rules
           </button>
