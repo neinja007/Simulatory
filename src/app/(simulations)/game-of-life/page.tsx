@@ -58,7 +58,220 @@ const presets: {
     ]
   }
 };
-type BasicPresets = 'blank' | 'random_10' | 'random_20' | 'random_50';
+const groups: {
+  [key: string]: {
+    size?: number;
+    repeat?: boolean;
+    data: {
+      presetName: keyof typeof presets;
+      align: `${'t' | 'b' | 'm'}${'r' | 'l' | 'm'}`;
+      invert?: 'h' | 'v' | 'b';
+      offsetX?: number;
+      offsetY?: number;
+    }[];
+  };
+} = {
+  glider_collider: {
+    size: 2,
+    data: [
+      {
+        presetName: 'glider_gun',
+        align: 'tl',
+        offsetX: 15,
+        offsetY: 10
+      },
+      {
+        presetName: 'glider_gun',
+        align: 'tr',
+        invert: 'h',
+        offsetX: 20
+      },
+      {
+        presetName: 'glider_gun',
+        align: 'bl',
+        invert: 'v',
+        offsetX: 20
+      },
+      {
+        presetName: 'glider_gun',
+        align: 'br',
+        invert: 'b',
+        offsetX: 15,
+        offsetY: 10
+      }
+    ]
+  },
+  spaceship_terminator: {
+    size: 2,
+    data: [
+      {
+        presetName: 'spaceship_1',
+        align: 'bl',
+        offsetX: 90
+      },
+      {
+        presetName: 'glider',
+        align: 'tl',
+        offsetX: 30
+      }
+    ]
+  },
+  spaceship_race: {
+    size: 2,
+    data: [
+      {
+        presetName: 'spaceship_1',
+        align: 'bl',
+        offsetX: 4
+      },
+      {
+        presetName: 'spaceship_1',
+        align: 'bl',
+        offsetX: 46
+      },
+      {
+        presetName: 'spaceship_1',
+        align: 'bl',
+        offsetX: 88
+      },
+      {
+        presetName: 'spaceship_1',
+        align: 'bl',
+        offsetX: 130
+      },
+      {
+        presetName: 'spaceship_1',
+        align: 'bl',
+        offsetX: 172
+      },
+      {
+        presetName: 'spaceship_1',
+        align: 'bl',
+        offsetX: 214
+      },
+      {
+        presetName: 'spaceship_1',
+        align: 'bl',
+        offsetX: 256
+      },
+      {
+        presetName: 'spaceship_1',
+        align: 'tl',
+        offsetX: 25,
+        invert: 'v'
+      },
+      {
+        presetName: 'spaceship_1',
+        align: 'tl',
+        offsetX: 67,
+        invert: 'v'
+      },
+      {
+        presetName: 'spaceship_1',
+        align: 'tl',
+        offsetX: 109,
+        invert: 'v'
+      },
+      {
+        presetName: 'spaceship_1',
+        align: 'tl',
+        offsetX: 151,
+        invert: 'v'
+      },
+      {
+        presetName: 'spaceship_1',
+        align: 'tl',
+        offsetX: 193,
+        invert: 'v'
+      },
+      {
+        presetName: 'spaceship_1',
+        align: 'tl',
+        offsetX: 235,
+        invert: 'v'
+      },
+      {
+        presetName: 'spaceship_1',
+        align: 'tl',
+        offsetX: 277,
+        invert: 'v'
+      }
+    ]
+  },
+  glider_spam: {
+    size: 2,
+    data: [
+      {
+        presetName: 'glider_gun',
+        align: 'tr'
+      },
+      {
+        presetName: 'glider_gun',
+        align: 'tr',
+        offsetX: -40
+      },
+      {
+        presetName: 'glider_gun',
+        align: 'tr',
+        offsetX: -80
+      },
+      {
+        presetName: 'glider_gun',
+        align: 'tr',
+        offsetX: -120
+      },
+      {
+        presetName: 'glider_gun',
+        align: 'tr',
+        offsetX: -160
+      },
+      {
+        presetName: 'glider_gun',
+        align: 'tr',
+        offsetX: -200
+      },
+      {
+        presetName: 'glider_gun',
+        align: 'bl',
+        invert: 'b'
+      },
+      {
+        presetName: 'glider_gun',
+        align: 'bl',
+        invert: 'b',
+        offsetX: -40
+      },
+      {
+        presetName: 'glider_gun',
+        align: 'bl',
+        invert: 'b',
+        offsetX: -80
+      },
+      {
+        presetName: 'glider_gun',
+        align: 'bl',
+        invert: 'b',
+        offsetX: -120
+      },
+      {
+        presetName: 'glider_gun',
+        align: 'bl',
+        invert: 'b',
+        offsetX: -160
+      },
+      {
+        presetName: 'glider_gun',
+        align: 'bl',
+        invert: 'b',
+        offsetX: -200
+      },
+      {
+        presetName: 'shredder',
+        align: 'mm'
+      }
+    ]
+  }
+};
 
 const Page = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -94,6 +307,28 @@ const Page = () => {
       }
     } else if (Object.keys(presets).includes(preset)) {
       const { height, width, fields } = presets[preset as keyof typeof presets];
+      const binaryFields: (0 | 1)[] = [];
+
+      fields.forEach((row) => {
+        const newRow = [];
+        row.forEach((cell) => {
+          if (typeof cell === 'number') {
+            newRow.push(cell);
+          } else {
+            const [value, count] = cell.split('-');
+            for (let i = 0; i < parseInt(count); i++) {
+              newRow.push(parseInt(value));
+            }
+          }
+        });
+        while (newRow.length < width) {
+          newRow.push(0);
+        }
+        if (newRow.length > width) {
+          throw new Error('Invalid preset');
+        }
+        binaryFields.push(...(newRow as (0 | 1)[]));
+      });
       for (let i = 0; i < numRows; i++) {
         grid[i] = [];
         for (let j = 0; j < numCols; j++) {
@@ -102,11 +337,82 @@ const Page = () => {
       }
       for (let i = 0; i < height; i++) {
         for (let j = 0; j < width; j++) {
-          grid[i + Math.floor((numRows - presets[preset].height) / 2)][
-            j + Math.floor((numCols - presets[preset].width) / 2)
-          ] = fields[i * width + j];
+          const offsetLeft = presets[preset].align?.includes('l')
+            ? 0
+            : presets[preset].align?.includes('r')
+              ? Math.floor(numCols - presets[preset].width)
+              : Math.floor((numCols - presets[preset].width) / 2);
+
+          const offsetTop = presets[preset].align?.includes('t')
+            ? 0
+            : presets[preset].align?.includes('b')
+              ? Math.floor(numRows - presets[preset].height)
+              : Math.floor((numRows - presets[preset].height) / 2);
+
+          grid[i + offsetTop][j + offsetLeft] = binaryFields[i * width + j];
         }
       }
+    } else if (Object.keys(groups).includes(preset)) {
+      for (let i = 0; i < numRows; i++) {
+        grid[i] = [];
+        for (let j = 0; j < numCols; j++) {
+          grid[i][j] = 0;
+        }
+      }
+      setSize((prev) => (groups[preset].size ? groups[preset].size : prev));
+      groups[preset].data.forEach(({ presetName, align, invert, offsetX = 0, offsetY = 0 }) => {
+        const { height, width, fields } = presets[presetName];
+        const binaryFields: (0 | 1)[] = [];
+
+        fields.forEach((row) => {
+          const newRow = [];
+          row.forEach((cell) => {
+            if (typeof cell === 'number') {
+              newRow.push(cell);
+            } else {
+              const [value, count] = cell.split('-');
+              for (let i = 0; i < parseInt(count); i++) {
+                newRow.push(parseInt(value));
+              }
+            }
+          });
+          while (newRow.length < width) {
+            newRow.push(0);
+          }
+          if (newRow.length > width) {
+            throw new Error('Invalid preset');
+          }
+          binaryFields.push(...(newRow as (0 | 1)[]));
+        });
+        for (let i = 0; i < height; i++) {
+          for (let j = 0; j < width; j++) {
+            const offsetLeft = align.includes('l')
+              ? 0
+              : align.includes('r')
+                ? Math.floor(numCols - width)
+                : Math.floor((numCols - width) / 2);
+
+            const offsetTop = align.includes('t')
+              ? 0
+              : align.includes('b')
+                ? Math.floor(numRows - height)
+                : Math.floor((numRows - height) / 2);
+
+            const row = i + offsetTop;
+            const col = j + offsetLeft;
+
+            if (invert === 'h') {
+              grid[row + offsetY][col - offsetX] = binaryFields[(i + 1) * width - j - 1];
+            } else if (invert === 'v') {
+              grid[row - offsetY][col + offsetX] = binaryFields[width * height - ((i + 1) * width - j - 1) - 1];
+            } else if (invert === 'b') {
+              grid[row - offsetY][col - offsetX] = binaryFields[width * height - (i * width + j) - 1];
+            } else {
+              grid[row + offsetY][col + offsetX] = binaryFields[i * width + j];
+            }
+          }
+        }
+      });
     } else {
       throw new Error('Invalid preset');
     }
