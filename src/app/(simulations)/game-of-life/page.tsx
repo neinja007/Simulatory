@@ -1,19 +1,34 @@
 'use client';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectSeparator, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 const speeds = [250, 100, 50, 25, 10, 1];
-const sizes = [2, 3, 5, 10];
+const sizes = [2, 4, 6, 8];
 
 const buttonClass: string & React.CSSProperties =
   'rounded bg-blue-500 px-3 py-1 font-medium text-white hover:bg-blue-700 disabled:opacity-50 disabled:hover:bg-blue-500';
 
+type Preset = ('blank' | 'random_10' | 'random_20' | 'random_50' | keyof typeof presets | keyof typeof groups) & string;
+
 const initialRules = ['-1', '-1', '0', '1', '-1', '-1', '-1', '-1', '-1'];
-const presets: { [key: string]: { height: number; width: number; fields: (0 | 1)[] } } = {
+const presets: {
+  [key: string]: {
+    height: number;
+    width: number;
+    fields: (number | `${'0' | '1'}-${number}`)[][];
+    align?: `${'t' | 'b' | 'm'}${'r' | 'l' | 'm'}`;
+  };
+} = {
   glider: {
     height: 3,
     width: 3,
-    fields: [0, 1, 0, 0, 0, 1, 1, 1, 1]
+    fields: [
+      [0, 1, 0],
+      [0, 0, 1],
+      [1, 1, 1]
+    ],
+    align: 'tl'
   },
   glider_gun: {
     height: 9,
@@ -50,7 +65,7 @@ const Page = () => {
   const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null);
 
   const [rules, setRules] = useState<string[]>(initialRules);
-  const [preset, setPreset] = useState<(keyof typeof presets | BasicPresets) & string>('random_20');
+  const [preset, setPreset] = useState<Preset>('random_20');
 
   const [numRows, setNumRows] = useState(0);
   const [numCols, setNumCols] = useState(0);
@@ -254,6 +269,7 @@ const Page = () => {
           )}
         </button>
         <button
+          disabled={!!(groups[preset] && groups[preset].size)}
           className={buttonClass}
           onClick={() => {
             setSize((prev) => sizes[(sizes.indexOf(prev) + 1) % sizes.length]);
@@ -262,66 +278,90 @@ const Page = () => {
             drawGrid();
           }}
         >
-          Size: {size} -{'>'} {sizes[(sizes.indexOf(size) + 1) % sizes.length]}
+          Size: {size}{' '}
+          {!(groups[preset] && groups[preset].size) ? (
+            <span>
+              -{'>'} {sizes[(sizes.indexOf(size) + 1) % sizes.length]}
+            </span>
+          ) : (
+            <span>(fixed)</span>
+          )}
         </button>
       </div>
-
-      <div className='mt-7'>
-        <div className='flex justify-between'>
-          <span className='font-bold'>Rules:</span>
-          <button onClick={() => setRules(initialRules)} className='text-blue-500 underline'>
-            Reset Rules
-          </button>
-        </div>
-        <div className='mt-2 grid font-mono sm:grid-cols-3'>
-          {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((count) => (
-            <span key={count} className='w-full text-center'>
-              <span className={count === 1 ? 'mr-6' : 'mr-4'}>
-                {count} Neighbor{count !== 1 && 's'}
-              </span>
-              <Select
-                value={rules[count]}
-                onValueChange={(value: string) =>
-                  setRules((prev) => {
-                    const newRules = [...prev];
-                    newRules[count] = value;
-                    return newRules;
-                  })
-                }
-              >
-                <SelectTrigger className='mx-auto h-7 w-[150px]'>
-                  <SelectValue placeholder='Action' />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value={'1'}>Populate</SelectItem>
-                  <SelectItem value={'-1'}>Die</SelectItem>
-                  <SelectItem value={'0'}>Don&apos;t Change</SelectItem>
-                </SelectContent>
-              </Select>
-            </span>
-          ))}
-        </div>
-      </div>
-      <div className='mt-7'>
-        <span className='font-bold'>Presets:</span>
-        <Select
-          value={preset}
-          onValueChange={(value: string) => setPreset(value as (keyof typeof presets | BasicPresets) & string)}
-        >
-          <SelectTrigger className='mx-auto h-7 w-[150px]'>
-            <SelectValue placeholder='Preset' />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value={'blank'}>Blank</SelectItem>
-            <SelectItem value={'random_10'}>Random 10%</SelectItem>
-            <SelectItem value={'random_20'}>Random 20%</SelectItem>
-            <SelectItem value={'random_50'}>Random 50%</SelectItem>
-            <SelectItem value={'glider'}>Glider</SelectItem>
-            <SelectItem value={'glider_gun'}>Glider Gun</SelectItem>
-            <SelectItem value={'101'}>1 0 1</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+      <Accordion type='single' collapsible>
+        <AccordionItem value='item-1'>
+          <AccordionTrigger>Rules</AccordionTrigger>
+          <AccordionContent>
+            <div className='flex justify-end'>
+              <button onClick={() => setRules(initialRules)} className='text-blue-500 underline'>
+                Reset Rules
+              </button>
+            </div>
+            <div className='mt-2 grid font-mono sm:grid-cols-3'>
+              {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((count) => (
+                <span key={count} className='w-full text-center'>
+                  <span className={count === 1 ? 'mr-6' : 'mr-4'}>
+                    {count} Neighbor{count !== 1 && 's'}
+                  </span>
+                  <Select
+                    value={rules[count]}
+                    onValueChange={(value: string) =>
+                      setRules((prev) => {
+                        const newRules = [...prev];
+                        newRules[count] = value;
+                        return newRules;
+                      })
+                    }
+                  >
+                    <SelectTrigger className='mx-auto h-7 w-[150px]'>
+                      <SelectValue placeholder='Action' />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value={'1'}>Populate</SelectItem>
+                      <SelectItem value={'-1'}>Die</SelectItem>
+                      <SelectItem value={'0'}>Don&apos;t Change</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </span>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value='item-2'>
+          <AccordionTrigger>Presets</AccordionTrigger>
+          <AccordionContent>
+            <Select value={preset} onValueChange={(value: string) => setPreset(value as Preset)}>
+              <SelectTrigger className='mx-auto h-7 w-[150px]'>
+                <SelectValue placeholder='Preset' />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={'blank'}>Blank</SelectItem>
+                <SelectItem value={'random_10'}>Random 10%</SelectItem>
+                <SelectItem value={'random_20'}>Random 20%</SelectItem>
+                <SelectItem value={'random_50'}>Random 50%</SelectItem>
+                <SelectSeparator />
+                {Object.keys(presets).map((key) => (
+                  <SelectItem key={key} value={key}>
+                    {key
+                      .split('_')
+                      .map((word) => word[0].toUpperCase() + word.slice(1))
+                      .join(' ')}
+                  </SelectItem>
+                ))}
+                <SelectSeparator />
+                {Object.keys(groups).map((key) => (
+                  <SelectItem key={key} value={key}>
+                    {key
+                      .split('_')
+                      .map((word) => word[0].toUpperCase() + word.slice(1))
+                      .join(' ')}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </div>
   );
 };
