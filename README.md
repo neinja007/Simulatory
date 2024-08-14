@@ -8,9 +8,9 @@ Simulatory - the name comes from combining both ***Simula**tion* and *Labora**to
 
 You can contribute by adding presets, modifications, or improvements. Ideas and recommendations are also highly appreciated. **Feel free to share whatever you think might contribute.**
 
-## Simulations
+# Simulations
 
-### [Conway's Game of Life](https://simulatory.vercel.app/game-of-life)
+## [Conway's Game of Life](https://simulatory.vercel.app/game-of-life)
 
 Link: [simulatory.vercel.app/game-of-life](https://simulatory.vercel.app/game-of-life)
 
