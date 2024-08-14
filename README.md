@@ -14,9 +14,9 @@ You can contribute by adding presets, modifications, or improvements. Ideas and 
 
 Link: [simulatory.vercel.app/game-of-life](https://simulatory.vercel.app/game-of-life)
 
-Topic: over- and underpopulation
-Description: Simulate and modify the legendary zero-player game of life, carefully devised by the British mathematician John Horton Conway in 1970.
-Modifications: The rules (circumstances under which cells are populated and depopulated) can be modified individually.
-Presets: Basic presets include the **glider**, the **glider gun**, **the reactor**, and many more. Also, by merging multiple presets, combinations such as the **glider collider** or the **space race** have been crafted.
+- Topic: over- and underpopulation
+- Description: Simulate and modify the legendary zero-player game of life, carefully devised by the British mathematician John Horton Conway in 1970.
+- Modifications: The rules (circumstances under which cells are populated and depopulated) can be modified individually.
+- Presets: Basic presets include the **glider**, the **glider gun**, **the reactor**, and many more. Also, by merging multiple presets, combinations such as the **glider collider** or the **space race** have been crafted.
 
 *New simulations underway...*
