@@ -1,7 +1,7 @@
 'use client';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Select, SelectContent, SelectItem, SelectSeparator, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const speeds = [250, 100, 50, 25, 10, 1];
 const sizes = [2, 4, 6, 8];
@@ -803,50 +803,56 @@ const Page = () => {
           )}
         </button>
       </div>
-      <Accordion type='single' collapsible>
-        <AccordionItem value='item-1'>
-          <AccordionTrigger>Rules</AccordionTrigger>
-          <AccordionContent>
-            <div className='flex justify-end'>
-              <button onClick={() => setRules(initialRules)} className='text-blue-500 underline'>
-                Reset Rules
-              </button>
-            </div>
-            <div className='mt-2 grid font-mono sm:grid-cols-3'>
-              {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((count) => (
-                <span key={count} className='w-full text-center'>
-                  <span className={count === 1 ? 'mr-6' : 'mr-4'}>
-                    {count} Neighbor{count !== 1 && 's'}
-                  </span>
-                  <Select
-                    value={rules[count]}
-                    onValueChange={(value: string) =>
-                      setRules((prev) => {
-                        const newRules = [...prev];
-                        newRules[count] = value;
-                        return newRules;
-                      })
-                    }
-                  >
-                    <SelectTrigger className='mx-auto h-7 w-[150px]'>
-                      <SelectValue placeholder='Action' />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value={'1'}>Populate</SelectItem>
-                      <SelectItem value={'-1'}>Die</SelectItem>
-                      <SelectItem value={'0'}>Don&apos;t Change</SelectItem>
-                    </SelectContent>
-                  </Select>
+      <br />
+      <Tabs defaultValue='rules' className='w-full'>
+        <TabsList className='w-full'>
+          <TabsTrigger value='rules' className='w-1/2'>
+            Rules
+          </TabsTrigger>
+          <TabsTrigger value='presets' className='w-1/2'>
+            Password
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value='rules'>
+          <div className='flex justify-end'>
+            <button onClick={() => setRules(initialRules)} className='text-blue-500 underline'>
+              Reset Rules
+            </button>
+          </div>
+          <div className='mt-2 grid font-mono sm:grid-cols-3'>
+            {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((count) => (
+              <span key={count} className='w-full text-center'>
+                <span className={count === 1 ? 'mr-6' : 'mr-4'}>
+                  {count} Neighbor{count !== 1 && 's'}
                 </span>
-              ))}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-        <AccordionItem value='item-2'>
-          <AccordionTrigger>Presets</AccordionTrigger>
-          <AccordionContent>
+                <Select
+                  value={rules[count]}
+                  onValueChange={(value: string) =>
+                    setRules((prev) => {
+                      const newRules = [...prev];
+                      newRules[count] = value;
+                      return newRules;
+                    })
+                  }
+                >
+                  <SelectTrigger className='mx-auto h-7 w-[150px]'>
+                    <SelectValue placeholder='Action' />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={'1'}>Populate</SelectItem>
+                    <SelectItem value={'-1'}>Die</SelectItem>
+                    <SelectItem value={'0'}>Don&apos;t Change</SelectItem>
+                  </SelectContent>
+                </Select>
+              </span>
+            ))}
+          </div>
+        </TabsContent>
+        <TabsContent value='presets'>
+          <div className='mx-auto mt-5 flex w-fit gap-x-3'>
+            <span>Select a Preset:</span>
             <Select value={preset} onValueChange={(value: string) => setPreset(value as Preset)}>
-              <SelectTrigger className='mx-auto h-7 w-[150px]'>
+              <SelectTrigger className='h-7 w-[150px]'>
                 <SelectValue placeholder='Preset' />
               </SelectTrigger>
               <SelectContent>
@@ -874,9 +880,9 @@ const Page = () => {
                 ))}
               </SelectContent>
             </Select>
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
