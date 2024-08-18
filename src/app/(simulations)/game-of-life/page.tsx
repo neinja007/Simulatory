@@ -168,6 +168,54 @@ const presets: {
       ['0-20', '1-2'],
       ['0-20', '1-2']
     ]
+  },
+  reactor_gun: {
+    height: 42,
+    width: 42,
+    fields: [
+      ['0-20', '1-2'],
+      ['0-20', '1-2'],
+      [],
+      [],
+      [],
+      [],
+      ['0-22', '1-2'],
+      ['0-22', 1],
+      ['0-22', 1],
+      ['0-23', 1],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      ['0-32', 1, '0-2', 1],
+      ['0-33', '1-3'],
+      ['1-2', '0-38', '1-2'],
+      ['1-2', '0-38', '1-2'],
+      ['0-6', '1-3'],
+      ['0-6', 1, '0-2', 1],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      ['0-18', 1],
+      ['0-19', 1],
+      ['0-19', 1],
+      ['0-18', '1-2'],
+      [],
+      [],
+      [],
+      [],
+      ['0-20', '1-2'],
+      ['0-20', '1-2']
+    ]
   }
 };
 const groups: {
@@ -380,6 +428,55 @@ const groups: {
       {
         presetName: 'shredder',
         align: 'mm'
+      }
+    ]
+  },
+  glider_party: {
+    size: 4,
+    data: [
+      {
+        presetName: 'reactor_gun',
+        align: 'tl'
+      },
+      {
+        presetName: 'reactor_gun',
+        align: 'tr'
+      },
+      {
+        presetName: 'reactor_gun',
+        align: 'bl'
+      },
+      {
+        presetName: 'reactor_gun',
+        align: 'br'
+      }
+    ]
+  },
+  reactors_vs_glider_guns: {
+    size: 2,
+    data: [
+      {
+        presetName: 'reactor_gun',
+        invert: 'h',
+        align: 'bl',
+        offsetX: -20
+      },
+      {
+        presetName: 'reactor_gun',
+        align: 'tr',
+        invert: 'h',
+        offsetX: 20
+      },
+      {
+        presetName: 'glider_gun',
+        align: 'tl',
+        offsetX: 20
+      },
+      {
+        presetName: 'glider_gun',
+        align: 'br',
+        invert: 'b',
+        offsetX: 20
       }
     ]
   }
