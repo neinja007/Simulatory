@@ -721,7 +721,7 @@ const Page = () => {
         width={600}
         height={400}
         ref={canvasRef}
-        className='mx-auto my-6 h-full w-full rounded-lg border p-1 shadow'
+        className='mx-auto my-6 h-full w-full rounded-lg border bg-white p-1 shadow'
       />
       <div className='grid gap-3 sm:grid-cols-2 md:grid-cols-4'>
         <button
