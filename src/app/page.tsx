@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import Header from '@/components/ui/header';
 import { routes } from '@/data/routes';
+import Image from 'next/image';
 
 export default function Overview() {
   return (
@@ -14,11 +15,18 @@ export default function Overview() {
               <CardTitle>{name}</CardTitle>
               <CardDescription>{description}</CardDescription>
             </CardHeader>
-            <CardContent className='bg-gray-200 pb-3 pt-3 text-center'>
-              <Link href={href} className='text-blue-500 hover:underline'>
+            <CardContent>
+              <div className='overflow-hidden rounded-lg border bg-white p-2 shadow-sm'>
+                <div className='relative aspect-video w-full'>
+                  <Image src={`${href}.png`} fill className='object-cover' alt={'Image for ' + name} />
+                </div>
+              </div>
+            </CardContent>
+            <div className='rounded-b-md bg-gray-200 pb-3 pt-3 text-center'>
+              <Link href={href} className='text-blue-400 hover:underline'>
                 Start {name}
               </Link>
-            </CardContent>
+            </div>
           </Card>
         ))}
       </div>
