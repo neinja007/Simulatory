@@ -8,7 +8,7 @@ In this way, not only the basics of math, but also more sophisticated areas such
 
 ## Contribution
 
-You can contribute by adding presets, modifications, or improvements. Ideas and recommendations are also highly appreciated. **Feel free to share whatever you think might contribute.**
+You can contribute by adding presets, modifications, or improvements. Ideas and recommendations are also highly appreciated. **Feel free to share whatever you think might be helpful.**
 
 # Simulations
 
