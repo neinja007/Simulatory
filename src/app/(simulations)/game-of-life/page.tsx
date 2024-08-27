@@ -810,7 +810,7 @@ const Page = () => {
             Rules
           </TabsTrigger>
           <TabsTrigger value='presets' className='w-1/2'>
-            Password
+            Presets
           </TabsTrigger>
         </TabsList>
         <TabsContent value='rules'>
